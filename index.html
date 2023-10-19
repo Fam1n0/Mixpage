@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixed Art</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        body { 
+            margin: 0;
+            background: url('bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: #FFFFFF;  /* Default white text color */
+        }
+        #toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.7);
+        }
+        #toolbar .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: transparent;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button img {
+            max-width: 100%;
+        }
+        .toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .toggle input {
+            margin: 0;
+        }
+        /* Dark Mode Styles */
+        .dark-mode {
+            background-color: #333;
+            color: #DDD;
+        }
+        #footer {
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <div class="buttons">
+            <button id="fileInput"><img src="Effects.png" alt="Effects"></button>
+            <button><img src="Ultes.png" alt="Ultes"></button>
+        </div>
+        <div class="toggle">
+            <label for="darkModeToggle">Dark Mode</label>
+            <input type="checkbox" id="darkModeToggle"> </div> </div> <script> let img; let imgLoaded = false; let pieceWidth = 50; let pieceHeight = 50; let cols, rows;
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        frameRate(10);  // Set frame rate to 10 frames per second
+        cols = width / pieceWidth;
+        rows = height / pieceHeight;
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    img = loadImage(event.target.result, () => {
+                        imgLoaded = true;
+                    });
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+    }
+
+    function draw() {
+        if (imgLoaded) {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = floor(random(img.width - pieceWidth));
+                    const y = floor(random(img.height - pieceHeight));
+                    const imgPiece = img.get(x, y, pieceWidth, pieceHeight);
+                    const destX = col * pieceWidth;
+                    const destY = row * pieceHeight;
+                    image(imgPiece, destX, destY);
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>
+
+
